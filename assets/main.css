@@ -1,3 +1,7 @@
-.upload-form {
+#uploadForm {
     gap: 16px;
+}
+
+#displaySection {
+    gap: 8px;
 }

@@ -8,48 +8,58 @@ window.addEventListener('DOMContentLoaded', () => {
             return;
         }
         displaySection.innerHTML = '';
-        const table = document.createElement('table');
-        table.classList.add('table')
 
         Papa.parse(fileInput.files[0], {
             header: true,
             step: function (results, parser) {
                 if (results.data) {
-                    const row = processRow(results.data);
-                    table.append(row);
+                    const cardContainer = document.createElement('div');
+                    cardContainer.classList.add('col-md-4', 'col-lg-3', 'p-2')
+                    const card = processRow(results.data);
+                    cardContainer.append(card);
+                    displaySection.append(cardContainer);
                 }
             },
-            complete: function () {
-                displaySection.append(table);
-                displaySection.classList.remove('d-none');
-            }
         })
     });
 
     function processRow(data) {
 
         let meCard = `MECARD:`
+        let vCard = `BEGIN:VCARD\nVERSION:4.0\nVERSION:3.0\n`
 
-        const tr = document.createElement('tr');
+        const card = document.createElement('card');
+        card.classList.add('card')
+
+        const userInfoContainerElem = document.createElement('ul');
+        userInfoContainerElem.classList.add('list-group', 'list-group-flush','border-top','mt-1');
 
         for (const key in data) {
-            const td = document.createElement('td');
-            td.innerHTML = data[key];
-            tr.append(td);
+            const x = key.toLowerCase();
+            if (x.includes('name') || x.includes('phone') || x.includes('email')) {
+                const li = document.createElement('li');
+                li.classList.add('list-group-item')
+                li.textContent = data[key];
+                userInfoContainerElem.append(li);
+            }
 
-            meCard += formatMeCardValue(key, data[key]);
+            // meCard += formatMeCardValue(key, data[key]);
+            vCard += formatVCardValue(key, data[key]);
         }
 
+
         meCard += `;`;
+        vCard += `\nEND:VCARD`;
 
-        const td = document.createElement('td');
-        const div = document.createElement('div');
-        td.append(div);
+        const qrCodeContainer = document.createElement('div');
+        qrCodeContainer.classList.add('d-flex', 'justify-content-center', 'card-img-top','mt-2')
 
-        new QRCode(div, meCard);
+        new QRCode(qrCodeContainer, vCard);
 
-        tr.append(td)
-        return tr;
+        card.append(qrCodeContainer)
+
+        card.append(userInfoContainerElem)
+        return card;
     }
 
     function formatMeCardValue(header, value) {
@@ -65,7 +75,27 @@ window.addEventListener('DOMContentLoaded', () => {
         const key = Object.keys(prefixes).find((key) => header.toLowerCase().includes(key));
 
         if (key) {
-            return prefixes[key] + value+';';
+            return prefixes[key] + value + ';';
+        }
+        return '';
+    }
+
+    function formatVCardValue(header, value) {
+        const prefixes = {
+            name: 'N:',
+            email: '\nEMAIL:',
+            phone: '\nTEL:',
+            website: '\nURL:',
+            address: '\nADR;',
+            note: '\nNOTE:',
+            title: '\nTITLE:',
+            company: '\nORG:'
+        }
+
+        const key = Object.keys(prefixes).find((key) => header.toLowerCase().includes(key));
+
+        if (key) {
+            return prefixes[key] + value;
         }
         return '';
     }
