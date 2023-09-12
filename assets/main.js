@@ -59,13 +59,13 @@ window.addEventListener('DOMContentLoaded', () => {
             phone: 'TEL:',
             website: 'URL:',
             address: 'ADR:',
-            note: 'ADR:NOTE',
+            note: 'NOTE:',
         }
 
         const key = Object.keys(prefixes).find((key) => header.toLowerCase().includes(key));
 
         if (key) {
-            return prefixes[key] + value;
+            return prefixes[key] + value+';';
         }
         return '';
     }
