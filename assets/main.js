@@ -33,7 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
     function processRow(data, qrCodeOptions) {
 
         let meCard = `MECARD:`
-        let vCard = `BEGIN:VCARD\nVERSION:4.0\nVERSION:3.0\n`
+        let vCard = `BEGIN:VCARD\nVERSION:4.0\n`
 
         const card = document.createElement('card');
         card.classList.add('card')
