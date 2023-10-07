@@ -12,7 +12,16 @@
 <section class="col-5 m-5 d-flex flex-column upload-form" id="uploadForm">
     <h4>Upload data</h4>
     <div class="form-group">
+        <label for="fileInput">CSV to use: </label>
         <input type="file" id="fileInput" class="form-control" accept="text/csv">
+    </div>
+    <div class="form-group">
+        <label for="width">QRCode Width</label>
+        <input id="width" type="number" min="40" class="form-control" value="170">
+    </div>
+    <div class="form-group">
+        <label for="height">QRCode Height</label>
+        <input id="height" type="number" min="40" class="form-control" value="170">
     </div>
     <div>
         <button class="btn btn-light" type="button" id="submitBtn">Submit</button>
